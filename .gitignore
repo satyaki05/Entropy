@@ -1,0 +1,38 @@
+# =================================================================
+# Entropy Project — Official .gitignore
+# =================================================================
+
+# --- Build Artifacts ---
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+build/
+bin/
+
+# --- SECRETS (Do NOT Push) ---
+.env
+.env.local
+src/main/resources/application.properties
+
+# --- TEMPLATES (DO Push) ---
+# This allows the blueprints to go to GitHub while the secrets stay home
+!src/main/resources/application.properties.example
+!.env.example
+
+# --- IDEs ---
+.idea
+*.iws
+*.iml
+*.ipr
+.classpath
+.project
+.settings
+.factorypath
+.sts4-cache
+.vscode/
+
+# --- Logs & OS ---
+*.log
+.DS_Store
+Thumbs.db
