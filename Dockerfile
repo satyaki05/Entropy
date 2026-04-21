@@ -13,4 +13,4 @@ WORKDIR /app
 # Copy only the built JAR from the first stage
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "echo 'DEBUG: JWT_KEY_LENGTH='${#SPRING_SECURITY_JWT_SECRET_KEY} && java -jar app.jar"]
