@@ -10,9 +10,8 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 @Service
 public class JWTUtil {
-    @Value("${spring.security.jwt.secret-key}")
+    @Value("${spring.security.jwt.secret-key:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}")
     private String secretKey;
-
     @Value("${spring.security.jwt.expiration}")
     private long expiration;
 
