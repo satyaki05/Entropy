@@ -36,13 +36,23 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors(Customizer.withDefaults())
-                .csrf(csrf -> csrf.disable()) // Explicitly disabled
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Use precise matchers
-                        .requestMatchers("/api/auth/signup", "/error").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                        .requestMatchers("/api/auth/**", "/ws/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/ws/**",
+                                "/ws/info",
+                                "/ws/info/**",
+                                "/topic/**",
+                                "/app/**",
+                                "/error",
+                                "/",
+                                "/index.html",
+                                "/*.js",
+                                "/*.css"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 // This will catch the 403 and PRINT the reason to your Render logs
