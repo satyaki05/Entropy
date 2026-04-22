@@ -2,10 +2,11 @@
 // Entropy — Frontend client for Spring Boot + STOMP/SockJS backend
 // =================================================================
 
+const BACKEND_URL = 'https://entropy-bjdu.onrender.com';
 const State = {
   apiBase: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:8080'
-    : window.location.origin,
+      ? 'http://localhost:8080'
+      : BACKEND_URL,
 
   token: localStorage.getItem('nex_token') || null,
   username: localStorage.getItem('nex_user') || null,
