@@ -21,7 +21,11 @@ import java.util.List;
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
-
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.startsWith("/api/auth/");
+    }
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
