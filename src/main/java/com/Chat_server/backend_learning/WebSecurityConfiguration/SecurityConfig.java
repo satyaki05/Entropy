@@ -36,12 +36,25 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors(Customizer.withDefaults())
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(csrf -> csrf.disable()) // Explicitly disabled
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers( "/api/auth/**", "/ws/**", "/").permitAll()
+                        // Use precise matchers
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers("/", "/index.html", "/*.js", "/*.css").permitAll()
                         .anyRequest().authenticated()
+                )
+                // This will catch the 403 and PRINT the reason to your Render logs
+                .exceptionHandling(ex -> ex
+                        .accessDeniedHandler((req, res, e) -> {
+                            System.out.println("DEBUG: 403 Access Denied on: " + req.getRequestURI() + " | Reason: " + e.getMessage());
+                            res.setStatus(403);
+                        })
+                        .authenticationEntryPoint((req, res, e) -> {
+                            System.out.println("DEBUG: 401 Unauthorized on: " + req.getRequestURI() + " | Reason: " + e.getMessage());
+                            res.setStatus(401);
+                        })
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
