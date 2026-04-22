@@ -25,16 +25,29 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody SignupReq req) {
         System.out.println(">>> SIGNUP HIT SUCCESSFULLY!");
-        if (userRepository.findByUsername(req.getUsername()).isPresent()) {
-            return ResponseEntity.badRequest().body("Username already exists!");
+        System.out.println(">>> Username: " + req.getUsername());
+        System.out.println(">>> Email: " + req.getEmail());
+
+        try {
+            if (userRepository.findByUsername(req.getUsername()).isPresent()) {
+                System.out.println(">>> USERNAME ALREADY EXISTS");
+                return ResponseEntity.badRequest().body("Username already exists!");
+            }
+            System.out.println(">>> SAVING USER...");
+            User user = new User();
+            user.setUsername(req.getUsername());
+            user.setEmail(req.getEmail());
+            user.setPassword(passwordEncoder.encode(req.getPassword()));
+            userRepository.save(user);
+            System.out.println(">>> USER SAVED SUCCESSFULLY");
+            String token = jwtUtil.generateToken(user.getUsername());
+            System.out.println(">>> TOKEN GENERATED");
+            return ResponseEntity.ok(Map.of("token", token, "username", user.getUsername()));
+        } catch (Exception e) {
+            System.out.println(">>> ERROR: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
-        User user = new User();
-        user.setUsername(req.getUsername());
-        user.setEmail(req.getEmail());
-        user.setPassword(passwordEncoder.encode(req.getPassword()));
-        userRepository.save(user);
-        String token =jwtUtil.generateToken(user.getUsername());
-        return ResponseEntity.ok(Map.of("token", token, "username", user.getUsername()));
     }
 
     @PostMapping("/login")
