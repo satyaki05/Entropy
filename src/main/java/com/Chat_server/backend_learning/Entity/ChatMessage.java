@@ -20,11 +20,9 @@ public class ChatMessage {
     @Convert(converter = MessageEncryptionConverter.class)
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
+
     @Column(name = "timestamp", nullable = false)
     private LocalDateTime timestamp;
-
-    @JoinColumn(name = "room_id", nullable = false)
-    private LocalDateTime sentAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
