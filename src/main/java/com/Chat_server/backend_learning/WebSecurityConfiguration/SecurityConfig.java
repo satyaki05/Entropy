@@ -38,13 +38,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers( "/",
-                                "/index.html",
-                                "/api/auth/**",
-                                "/ws/**",
-                                "/*.html",
-                                "/*.css",
-                                "/*.js").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers( "/api/auth/**", "/ws/**", "/").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
@@ -57,7 +52,7 @@ public class SecurityConfig {
         config.setAllowCredentials(true);
 
         // Use your actual Netlify URL instead of "*" for better security
-        config.setAllowedOrigins(List.of("https://entropy-app.netlify.app", "http://localhost:5173"));
+        config.setAllowedOrigins(List.of("https://entropy-app.netlify.app","https://entropy-app.netlify.app/","http://localhost:5173"));
 
         config.setAllowedHeaders(List.of("*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
