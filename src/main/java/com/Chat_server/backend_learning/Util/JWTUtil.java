@@ -8,12 +8,20 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+
 @Service
 public class JWTUtil {
-    @Value("${spring.security.jwt.secret-key:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}")
-    private String secretKey;
-    @Value("${spring.security.jwt.expiration}")
-    private long expiration;
+
+    private final String secretKey;
+    private final long expiration;
+
+    public JWTUtil(
+            @Value("${spring.security.jwt.secret-key:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}") String secretKey,
+            @Value("${spring.security.jwt.expiration:86400000}") long expiration
+    ) {
+        this.secretKey = secretKey;
+        this.expiration = expiration;
+    }
 
     public String generateToken(String username) {
         return Jwts.builder()
@@ -45,5 +53,4 @@ public class JWTUtil {
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
     }
-
 }
