@@ -75,7 +75,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.setAllowedOriginPatterns(List.of(
-                "https://entropy-app.netlify.app",
+                "https://entropy-frontend-ochre.vercel.app/",
                 "http://localhost:8080",
                 "http://localhost:3000",
                 "http://127.0.0.1:*"
